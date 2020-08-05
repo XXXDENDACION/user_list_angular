@@ -17,7 +17,7 @@
           <mat-form-field>
             <mat-label>Choose role</mat-label>
             <mat-select formControlName="role" name="role" required>
-              <mat-option *ngFor="let role of roles" [value]="role.value">
+              <mat-option *ngFor="let role of roles" [value]="role.viewValue">
                 {{role.viewValue}}
               </mat-option>
             </mat-select>
