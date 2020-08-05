@@ -1,4 +1,17 @@
 table {
     width: 50%;
-    margin: 60px 0 0 40px;
+    margin: 0 0 0 40px;
   }
+.main {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0 0 40px;
+}
+.search-items {
+  display: flex;
+}
+.search-select {
+  padding-left: 15px;
+}
+  
