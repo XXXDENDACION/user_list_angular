@@ -4,10 +4,11 @@ import { UserAddComponent } from '../user-add/user-add.component';
 import {User} from '../../models/user';
 import {Role} from '../../models/role';
 import { MatTable } from '@angular/material/table';
+import { UserUpdateComponent } from '../user-update/user-update.component';
 
 
 
-const ELEMENT_DATA: User[] = [
+let ELEMENT_DATA: User[] = [
   {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', },
   {firstName: "Ivan", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager',},
   {firstName: "Roma", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', },
@@ -24,10 +25,11 @@ export class UserListComponent implements OnInit {
    @ViewChild(MatTable) table: MatTable<any>;
    roles: Role[] = [
   
-    {value:"artist",viewValue: 'Artist'},
-    {value:"designer",viewValue: 'Designer'},
-    {value:"artManager",viewValue: 'Art manager'}
+    {viewValue: 'Artist'},
+    {viewValue: 'Designer'},
+    {viewValue: 'Art Manager'}
 ];
+
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'role', 'items'];
   dataSource = ELEMENT_DATA;
   value = '';
@@ -56,11 +58,33 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  onUpdate(user: User) : void {
+    const dialogRef = this.dialog.open(UserUpdateComponent, {
+      width: '800px',
+      data: user
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+      // this.user = result;
+      ELEMENT_DATA.forEach((item,index)=>{
+        if(item === user) {
+          const ind = index;
+          ELEMENT_DATA[ind] = result;
+        }
+      })
+      this.dataSource = ELEMENT_DATA;
+      this.table.renderRows();
+      }
+    });
+  }
+
   deleteUser(user: User) {
     if(confirm("Вы хотите удалить пользователя?")) {
-      this.dataSource = this.dataSource.filter(item => {
+       ELEMENT_DATA = ELEMENT_DATA.filter(item => {
         return item != user;
       });
+      this.dataSource = ELEMENT_DATA;
+
     }
   }
 

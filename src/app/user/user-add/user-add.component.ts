@@ -12,9 +12,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class UserAddComponent implements OnInit {
   roles: Role[] = [
   
-    {value:"artist",viewValue: 'Artist'},
-    {value:"designer",viewValue: 'Designer'},
-    {value:"artManager",viewValue: 'Art manager'}
+    {viewValue: 'Artist'},
+    {viewValue: 'Designer'},
+    {viewValue: 'Art Manager'}
 ];
   user: User = {
     firstName: '',

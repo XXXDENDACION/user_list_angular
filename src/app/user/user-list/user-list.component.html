@@ -52,7 +52,7 @@
     <ng-container matColumnDef="items">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-            <button mat-icon-button color="primary"  >
+            <button mat-icon-button color="primary" (click)="onUpdate(element)" >
                 <mat-icon >edit</mat-icon>
             </button> 
             <button mat-icon-button color="primary" (click)="deleteUser(element)">
