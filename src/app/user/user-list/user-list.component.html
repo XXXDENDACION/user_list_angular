@@ -8,16 +8,16 @@
             </button>
           </mat-form-field>
           <mat-form-field class="search-select">
-            <mat-label>Favorite food</mat-label>
-            <mat-select [(ngModel)]="selectedValue" name="food">
-              <mat-option *ngFor="let food of foods" [value]="food.value">
-                {{food.viewValue}}
+            <mat-label>search by role</mat-label>
+            <mat-select [(ngModel)]="selectedValue" name="role">
+              <mat-option *ngFor="let role of roles" [value]="role.value">
+                {{role.viewValue}}
               </mat-option>
             </mat-select>
           </mat-form-field>
     </div>
     <div class="button-item">
-        <button mat-raised-button color="primary">Add new user</button>
+        <button mat-raised-button color="primary" (click)="onAdd()">Add new user</button>
     </div>
 </div>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">

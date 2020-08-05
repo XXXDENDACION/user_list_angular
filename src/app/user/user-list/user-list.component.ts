@@ -1,23 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UserAddComponent } from '../user-add/user-add.component';
+import {User} from '../../models/user';
+import {Role} from '../../models/role';
 
-export interface PeriodicElement {
-  firstName: string,
-  lastName: string,
-  email: string,
-  role: string,
-  items: string
-}
 
-interface Food {
-  value: string;
-  viewValue: string;
-}
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', items: ''},
-  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', items: ''},
-  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', items: ''},
-  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', items: ''},
+const ELEMENT_DATA: User[] = [
+  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', },
+  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager',},
+  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', },
+  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager',},
 ];
 
 @Component({
@@ -27,18 +20,36 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 
 export class UserListComponent implements OnInit {
-  foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
+   roles: Role[] = [
+  
+    {value:"artist",viewValue: 'Artist'},
+    {value:"designer",viewValue: 'Designer'},
+    {value:"artManager",viewValue: 'Art manager'}
+];
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'role', 'items'];
   dataSource = ELEMENT_DATA;
-  value = 'Clear me';
+  value = '';
   selectedValue: string;
-  constructor() { }
+  user: User;
+  
+  constructor(
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  onAdd() : void {
+    const dialogRef = this.dialog.open(UserAddComponent, {
+      width: '800px',
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+      this.user = result;
+      console.log(this.user);
+      }
+    });
   }
 
 }
