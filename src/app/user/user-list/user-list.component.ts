@@ -50,9 +50,9 @@ export class UserListComponent implements OnInit {
   }
 
   onAdd() : void {
-    const dialogRef = this.dialog.open(UserAddComponent, {
+    const dialogRef = this.dialog.open(UserUpdateComponent, {
       width: '800px',
-      data: {}
+      data: {user:{},str:"Add user"}
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
@@ -68,7 +68,7 @@ export class UserListComponent implements OnInit {
   onUpdate(user: User) : void {
     const dialogRef = this.dialog.open(UserUpdateComponent, {
       width: '800px',
-      data: user
+      data: {user:user,str:"Update user"}
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {

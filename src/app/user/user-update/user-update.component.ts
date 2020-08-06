@@ -16,8 +16,9 @@ export class UserUpdateComponent implements OnInit {
     {viewValue: 'Designer'},
     {viewValue: 'Art Manager'}
 ];
-  user= this.data;
+  user= this.data.user;
   myForm: FormGroup;
+  title= this.data.str;
   
   constructor( public dialogRef: MatDialogRef<UserUpdateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
