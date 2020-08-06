@@ -31,7 +31,7 @@ export class UserListComponent implements OnInit {
 ];
 
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'role', 'items'];
-  dataSource = ELEMENT_DATA;
+  dataSource;
   value = '';
   selectedValue: string;
   user: User;
@@ -41,6 +41,12 @@ export class UserListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getItemsFromLocal();
+  }
+
+  getItemsFromLocal() : void {
+    ELEMENT_DATA = JSON.parse(localStorage.getItem('users'))
+    this.dataSource = ELEMENT_DATA;
   }
 
   onAdd() : void {
@@ -52,6 +58,7 @@ export class UserListComponent implements OnInit {
       if(result) {
       this.user = result;
       ELEMENT_DATA.push(this.user);
+      localStorage.setItem('users', JSON.stringify(ELEMENT_DATA));
       this.dataSource = ELEMENT_DATA;
       this.table.renderRows();
       }
@@ -65,13 +72,13 @@ export class UserListComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-      // this.user = result;
       ELEMENT_DATA.forEach((item,index)=>{
         if(item === user) {
           const ind = index;
           ELEMENT_DATA[ind] = result;
         }
       })
+      localStorage.setItem('users', JSON.stringify(ELEMENT_DATA));
       this.dataSource = ELEMENT_DATA;
       this.table.renderRows();
       }
@@ -83,6 +90,7 @@ export class UserListComponent implements OnInit {
        ELEMENT_DATA = ELEMENT_DATA.filter(item => {
         return item != user;
       });
+      localStorage.setItem('users', JSON.stringify(ELEMENT_DATA));
       this.dataSource = ELEMENT_DATA;
 
     }
