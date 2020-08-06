@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { UserAddComponent } from '../user-add/user-add.component';
 import {User} from '../../models/user';
 import {Role} from '../../models/role';
 import { MatTable } from '@angular/material/table';
@@ -9,10 +8,7 @@ import { UserUpdateComponent } from '../user-update/user-update.component';
 
 
 let ELEMENT_DATA: User[] = [
-  {firstName: "Den", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', },
-  {firstName: "Ivan", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager',},
-  {firstName: "Roma", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager', },
-  {firstName: "Alex", lastName: 'Wes', email: "test@test.ru", role: 'Art Manager',},
+
 ];
 
 @Component({
