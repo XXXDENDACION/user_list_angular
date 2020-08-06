@@ -12,19 +12,23 @@
           <mat-form-field class="example-full-width">
             <mat-label>Email</mat-label>
             <input matInput type="text" formControlName="email" required>
-            <mat-error *ngIf="myForm.controls.email.invalid">'Please write correct email'</mat-error>
+            <mat-error>'Please write correct email'</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Choose role</mat-label>
-            <mat-select formControlName="role" name="role" required>
+            <mat-select  (selectionChange)="onChange($event)" formControlName="role" name="role" required>
               <mat-option *ngFor="let rol of roles" [value]="rol.viewValue">
                 {{rol.viewValue}}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="showMessage">
+              Please select 
+            </mat-error>
+            <!-- <mat-hint *ngIf="showMessage">Can't create one more*</mat-hint> -->
           </mat-form-field>
     </div>
     <div class="item-panel">
-    <button  [disabled]="myForm.invalid" type="submit" mat-button [mat-dialog-close]="user" (click)="onSubmit()">Confirm</button>
+    <button   [disabled]="myForm.invalid || showMessage"  type="submit" mat-button [mat-dialog-close]="user" (click)="onSubmit()">Confirm</button>
     <button mat-button (click)="onNoClick()">Cancel</button>
     </div>
 </form>

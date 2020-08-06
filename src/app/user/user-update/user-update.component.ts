@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from 'src/app/models/user';
-import { Role } from 'src/app/models/role';
+import {roles} from '../../const/roles'
 
 @Component({
   selector: 'app-user-update',
@@ -10,23 +10,40 @@ import { Role } from 'src/app/models/role';
   styleUrls: ['./user-update.component.css']
 })
 export class UserUpdateComponent implements OnInit {
-  roles: Role[] = [
   
-    {viewValue: 'Artist'},
-    {viewValue: 'Designer'},
-    {viewValue: 'Art Manager'}
-];
-  user= this.data.user;
+  roles = roles;
+  users: User[] = JSON.parse(localStorage.getItem('users'));
+  freeArtManage: boolean;
+  user= this.data.user
   myForm: FormGroup;
-  title= this.data.str;
+  showMessage = false;
+  title =(Object.keys(this.user).length) ? "Update User" : "Add User"
+  
   
   constructor( public dialogRef: MatDialogRef<UserUpdateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
     this.createForm();
+    this.checkFreeRole();
   }
   
+  checkFreeRole() : void {
+    const role = this.users.find(item=>{
+      return item.role === "Art Manager";
+    });
+    if(role) this.freeArtManage = true;
+    else this.freeArtManage = false;
+  }
+
+  onChange(event) {
+    console.log(event.value);
+    if(event.value === "Art Manager" && this.freeArtManage) {
+      this.showMessage = true;
+    }
+    else this.showMessage = false;
+  } 
+
   createForm() :void {
   
     this.myForm = new FormGroup({
@@ -36,9 +53,7 @@ export class UserUpdateComponent implements OnInit {
                                               Validators.email]),
       role: new FormControl(this.user.role,[Validators.required]),
     })
-    console.log(this.myForm.controls.role.value);
   }
-
 
   onSubmit() : void {
     this.user = {
@@ -47,7 +62,11 @@ export class UserUpdateComponent implements OnInit {
       email: this.myForm.value.email,
       role: this.myForm.value.role
     }
-    this.dialogRef.close(this.myForm.value);
+    if(this.user.role === "Art Manager") {
+      alert("Can't create new Art Manager");
+      this.dialogRef.close();
+    }
+    else  this.dialogRef.close(this.myForm.value);
   }
 
   onNoClick() : void {

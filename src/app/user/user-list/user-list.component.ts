@@ -48,7 +48,7 @@ export class UserListComponent implements OnInit {
   onAdd() : void {
     const dialogRef = this.dialog.open(UserUpdateComponent, {
       width: '800px',
-      data: {user:{},str:"Add user"}
+      data: {user: {}},
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
@@ -56,6 +56,7 @@ export class UserListComponent implements OnInit {
       ELEMENT_DATA.push(this.user);
       localStorage.setItem('users', JSON.stringify(ELEMENT_DATA));
       this.dataSource = ELEMENT_DATA;
+      console.log("UserListComponent -> this.dataSource", this.dataSource)
       this.table.renderRows();
       }
     });
@@ -64,7 +65,7 @@ export class UserListComponent implements OnInit {
   onUpdate(user: User) : void {
     const dialogRef = this.dialog.open(UserUpdateComponent, {
       width: '800px',
-      data: {user:user,str:"Update user"}
+      data: {user:user}
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
