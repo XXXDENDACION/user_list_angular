@@ -19,6 +19,11 @@
     <div class="button-item">
         <button mat-raised-button color="primary" (click)="onAdd()">Add new user</button>
     </div>
+  
+</div>
+<div [@openClose]="isOpen? 'open' : 'close'" [ngClass]="isValid ? 'valid' : 'warning'" class="popup">
+  <span></span>
+  <span>{{error}}</span>
 </div>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 

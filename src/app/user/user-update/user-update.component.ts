@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from 'src/app/models/user';
-import {roles} from '../../const/roles'
+import {roles} from '../../const/roles';
+
 
 @Component({
   selector: 'app-user-update',
@@ -12,7 +13,7 @@ import {roles} from '../../const/roles'
 export class UserUpdateComponent implements OnInit {
   
   roles = roles;
-  users: User[] = JSON.parse(localStorage.getItem('users'));
+  users: User[];
   freeArtManage: boolean;
   user= this.data.user
   myForm: FormGroup;
@@ -25,15 +26,6 @@ export class UserUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.createForm();
-    this.checkFreeRole();
-  }
-  
-  checkFreeRole() : void {
-    const role = this.users.find(item=>{
-      return item.role === "Art Manager";
-    });
-    if(role) this.freeArtManage = true;
-    else this.freeArtManage = false;
   }
 
   onChange(event) {
@@ -50,7 +42,7 @@ export class UserUpdateComponent implements OnInit {
       firstName: new FormControl(this.user.firstName,[Validators.required]),
       lastName: new FormControl(this.user.lastName,[Validators.required]),
       email: new FormControl(this.user.email,[Validators.required,
-                                              Validators.email]),
+                                              Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]),
       role: new FormControl(this.user.role,[Validators.required]),
     })
   }
@@ -62,11 +54,7 @@ export class UserUpdateComponent implements OnInit {
       email: this.myForm.value.email,
       role: this.myForm.value.role
     }
-    if(this.user.role === "Art Manager") {
-      alert("Can't create new Art Manager");
-      this.dialogRef.close();
-    }
-    else  this.dialogRef.close(this.myForm.value);
+    this.dialogRef.close(this.myForm.value);
   }
 
   onNoClick() : void {
