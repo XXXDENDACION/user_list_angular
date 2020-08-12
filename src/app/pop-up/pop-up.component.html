@@ -1,0 +1,6 @@
+<div [@openClose]="data.isOpen? 'open' : 'close'" 
+[ngClass]="data.isValid ? 'valid' : 'warning'" 
+class="popup"
+>
+<span>{{data.message}}</span>
+</div>

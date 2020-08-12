@@ -1,16 +1,19 @@
+
+<mat-spinner class="spinner" [style.display]="isLoad? 'none' :'absolute'"></mat-spinner>
+<div  [ngClass]="isLoad ? 'null' : 'all-content'" >
 <div class="main">
     <div class="search-items">
         <mat-form-field class="example-form-field">
             <mat-label>Clearable input</mat-label>
-            <input matInput type="text" [(ngModel)]="value">
+            <input (keydown)="getWaitToInvoke()" matInput type="text" [(ngModel)]="value">
             <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
           <mat-form-field class="search-select">
             <mat-label>search by role</mat-label>
-            <mat-select [(ngModel)]="selectedValue" name="role">
-              <mat-option *ngFor="let role of roles" [value]="role.value">
+            <mat-select (selectionChange)="getUsers()" [(ngModel)]="selectedValue" name="role">
+              <mat-option *ngFor="let role of roles" [value]="role.viewValue">
                 {{role.viewValue}}
               </mat-option>
             </mat-select>
@@ -20,10 +23,6 @@
         <button mat-raised-button color="primary" (click)="onAdd()">Add new user</button>
     </div>
   
-</div>
-<div [@openClose]="isOpen? 'open' : 'close'" [ngClass]="isValid ? 'valid' : 'warning'" class="popup">
-  <span></span>
-  <span>{{error}}</span>
 </div>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
@@ -69,3 +68,4 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+  </div>

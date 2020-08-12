@@ -1,0 +1,24 @@
+.popup {
+    padding: 20px 40px;
+    min-width: 200px;
+    position: fixed;
+    z-index: 100;
+    right: 0px;
+    top: 10px;
+    font-size: 18px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 4px;
+    overflow: hidden;
+    transform: translateX(100%);
+    animation: show_popup  1s ease forwards;
+  } 
+  .warning { 
+    background-color: #a60000;
+    border-left: 8px solid #5e0000;
+    color: #b9b7b7;
+  }
+  .valid {
+    background-color: rgba(49, 148, 10, 0.5);
+    border-left: 8px solid rgba(49, 148, 10, 1);
+    color: #285416;
+  }

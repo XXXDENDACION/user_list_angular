@@ -1,5 +1,8 @@
+<mat-spinner class="spinner" 
+[style.display]="isLoad? 'none' :'absolute'">
+</mat-spinner>
 <h2>{{title}}</h2>
-<form [formGroup]="myForm">
+<form [formGroup]="myForm" [ngClass]="isLoad ? 'null' : 'all-content'">
     <div class="main">
         <mat-form-field class="example-full-width">
             <mat-label>First name</mat-label>

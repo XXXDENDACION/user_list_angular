@@ -1,9 +1,9 @@
 table {
-    width: 50%;
+    width: 800px;
     margin: 0 0 0 40px;
   }
 .main {
-  width: 50%;
+  width: 800px;
   display: flex;
   justify-content: space-between;
   margin: 15px 0 0 40px;
@@ -14,29 +14,15 @@ table {
 .search-select {
   padding-left: 15px;
 }
-.popup {
-  padding: 20px 40px;
-  min-width: 200px;
+.all-content {
+  display: none;
+}
+.spinner {
   position: absolute;
-  right: 0px;
-  top: 10px;
-  font-size: 18px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  border-radius: 4px;
-  overflow: hidden;
-  transform: translateX(100%);
-  animation: show_popup  1s ease forwards;
-} 
-.warning { 
-  background-color: #ffdb9b;
-  border-left: 8px solid #ffa502;
-  color: #ce8500;
+        top: 20%;
+        left: 50%;
 }
-.valid {
-  background-color: rgba(49, 148, 10, 0.5);
-  border-left: 8px solid rgba(49, 148, 10, 1);
-  color: #285416;
-}
+
 /* @keyframes show_popup {
   0% {
     transform: translateX(100%);

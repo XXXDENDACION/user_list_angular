@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from 'src/app/models/user';
-import {roles} from '../../const/roles';
+import { RolesService } from '../../../shared/services/roles.service';
+
 
 
 @Component({
@@ -12,17 +13,19 @@ import {roles} from '../../const/roles';
 })
 export class UserUpdateComponent implements OnInit {
   
-  roles = roles;
+  roles = this.data.roles;
   users: User[];
   freeArtManage: boolean;
   user= this.data.user
   myForm: FormGroup;
   showMessage = false;
   title =(Object.keys(this.user).length) ? "Update User" : "Add User"
+  isLoad: boolean = true;
   
   
   constructor( public dialogRef: MatDialogRef<UserUpdateComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private rolesService: RolesService) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -35,6 +38,7 @@ export class UserUpdateComponent implements OnInit {
     }
     else this.showMessage = false;
   } 
+
 
   createForm() :void {
   

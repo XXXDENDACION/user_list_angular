@@ -16,13 +16,16 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { PopUpComponent } from './pop-up/pop-up.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     UserListComponent,
-    UserUpdateComponent
+    UserUpdateComponent,
+    PopUpComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import {HttpClientModule} from '@angular/common/http';
     MatDialogModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
