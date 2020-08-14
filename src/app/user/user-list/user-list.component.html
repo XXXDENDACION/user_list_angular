@@ -13,7 +13,7 @@
           <mat-form-field class="search-select">
             <mat-label>search by role</mat-label>
             <mat-select (selectionChange)="getUsers()" [(ngModel)]="selectedValue" name="role">
-              <mat-option *ngFor="let role of roles" [value]="role.viewValue">
+              <mat-option *ngFor="let role of searchRoles" [value]="role.viewValue">
                 {{role.viewValue}}
               </mat-option>
             </mat-select>

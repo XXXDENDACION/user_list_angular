@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/models/user';
+import { User } from 'src/shared/models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +25,7 @@ export class UserService {
   }
 
   addUser(user: User): Observable<User> {
+    console.log('test');
     return this.http.post<User>(this.url, user);
   }
 

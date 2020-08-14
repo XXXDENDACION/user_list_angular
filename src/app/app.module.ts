@@ -18,7 +18,12 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { PopUpComponent } from './pop-up/pop-up.component';
-
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import {USER_REDUCER_NODE,userReducer} from '../shared/store/reducers/user.reducer';
+import {UserEffects} from '../shared/store/effects/user.effects'
 
 @NgModule({
   declarations: [
@@ -41,7 +46,11 @@ import { PopUpComponent } from './pop-up/pop-up.component';
     MatDialogModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    StoreModule.forRoot({}, {}),
+    StoreModule.forFeature(USER_REDUCER_NODE,userReducer),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    EffectsModule.forRoot([UserEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]

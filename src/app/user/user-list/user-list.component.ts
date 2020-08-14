@@ -1,11 +1,18 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { User } from '../../models/user';
-import { Role } from '../../models/role';
+import { User } from 'src/shared/models/user';
 import { MatTable } from '@angular/material/table';
 import { UserUpdateComponent } from '../user-update/user-update.component';
 import { UserService } from '../../../shared/services/user.service';
-import { SubscriptionLike, of, throwError, range, timer, Subject } from 'rxjs';
+import {
+  SubscriptionLike,
+  of,
+  throwError,
+  range,
+  timer,
+  Subject,
+  Observable,
+} from 'rxjs';
 import {
   catchError,
   windowCount,
@@ -19,6 +26,14 @@ import {
 import { RolesService } from 'src/shared/services/roles.service';
 import { PopUpService } from 'src/shared/services/popup.service';
 import { renderFlagCheckIfStmt } from '@angular/compiler/src/render3/view/template';
+import { UserState } from 'src/shared/store/reducers/user.reducer';
+import { Store, select } from '@ngrx/store';
+import {
+  UserGetActionSucces,
+  UserReloadAction,
+  UserAddActionCall,
+} from 'src/shared/store/actions/user.actions';
+import { selectUsers, selectUser } from '../../../shared/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-user-list',
@@ -29,6 +44,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table: MatTable<any>;
   roles;
   searchRoles;
+  public getUsers$: Observable<User[]> = this.store$.pipe(select(selectUsers));
+  //public createUser$: Observable<User> = this.store$.pipe(select(selectUser));
   private inputChanged: Subject<string> = new Subject<string>();
   private unsubscribe$ = new Subject();
   users: User[];
@@ -41,7 +58,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   ];
   dataSource;
   value = '';
-  selectedValue:string =  "All";
+  selectedValue: string = 'All';
   user: User;
   isOpen = false;
   error: string;
@@ -52,7 +69,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private userService: UserService,
     private rolesService: RolesService,
-    private popUpService: PopUpService
+    private popUpService: PopUpService,
+    private store$: Store<UserState>
   ) {}
 
   ngOnInit(): void {
@@ -76,54 +94,54 @@ export class UserListComponent implements OnInit, OnDestroy {
           (res) => {
             console.log(res);
             this.roles = res;
-            this.searchRoles = res;
+            this.searchRoles = [...res];
             this.isLoad = !this.isLoad;
           },
           (err) => {
             this.popUpService.setData(this.isValid, !this.isOpen, err.message);
             return throwError(err);
           },
-          () => this.searchRoles.unshift({viewValue: 'All'})
-        ),
-        takeUntil(this.unsubscribe$)
-      )
-
-      .subscribe();
-  }
-
-
-  getEvent() {
-    this.inputChanged
-    .pipe(
-      debounceTime(1000),
-      takeUntil(this.unsubscribe$)
-    )
-    .subscribe(() => this.getUsers());
-  }
-
-  getWaitToInvoke() : void {
-    this.inputChanged.next()
-  }
-
-  getUsers(): void {
-    this.userService
-      .getUsers(this.selectedValue, this.value)
-      .pipe(
-        tap(
-          (res) => {
-            this.users = res;
-          },
-          (err) => {
-            this.popUpService.setData(this.isValid, !this.isOpen, err.message);
-            return throwError(err);
-          },
           () => {
-            this.dataSource = this.users;
+            this.searchRoles.unshift({ viewValue: 'All' });
           }
         ),
         takeUntil(this.unsubscribe$)
       )
+
       .subscribe();
+  }
+
+  getEvent() {
+    this.inputChanged
+      .pipe(debounceTime(1000), takeUntil(this.unsubscribe$))
+      .subscribe(() => this.getUsers());
+  }
+
+  getWaitToInvoke(): void {
+    this.inputChanged.next();
+  }
+
+  getUsers(): void {
+    const searchData = {
+      selectedValue: this.selectedValue,
+      value: this.value,
+    };
+
+    this.store$.dispatch(UserReloadAction({ searchData }));
+    this.getUsers$
+      .pipe(
+        tap(
+          (res) => (this.dataSource = res),
+          (err) =>
+            this.popUpService.setData(this.isValid, !this.isOpen, err.message)
+        ),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe();
+    console.log(
+      'UserListComponent -> getUsers -> this.getUsers$',
+      this.getUsers$
+    );
   }
 
   onAdd(): void {
@@ -132,38 +150,42 @@ export class UserListComponent implements OnInit, OnDestroy {
       data: { user: {}, roles: this.roles },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.userService
-          .addUser(result)
-          .pipe(
-            tap(
-              (res) => {
-                this.popUpService.setData(
-                  !this.isValid,
-                  !this.isOpen,
-                  'User add!'
-                );
-              },
-              (err) => {
-                if (err.error.data) {
-                  for (let item in err.error.data.errors) {
-                    err.error.data.errors[item].forEach((msg) => {
-                      this.popUpService.setData(
-                        this.isValid,
-                        !this.isOpen,
-                        msg
-                      );
-                    });
-                  }
-                }
-                return throwError(err);
-              },
-              () => this.getUsers()
-            ),
-            takeUntil(this.unsubscribe$)
-          )
-          .subscribe();
+    console.log("UserListComponent -> onAdd -> result", result)
+      if(result){
+      this.store$.dispatch(UserAddActionCall({user: result}));
       }
+      // if (result) {
+      //   this.userService
+      //     .addUser(result)
+      //     .pipe(
+      //       tap(
+      //         (res) => {
+      //           this.popUpService.setData(
+      //             !this.isValid,
+      //             !this.isOpen,
+      //             'User add!'
+      //           );
+      //         },
+      //         (err) => {
+      //           if (err.error.data) {
+      //             for (let item in err.error.data.errors) {
+      //               err.error.data.errors[item].forEach((msg) => {
+      //                 this.popUpService.setData(
+      //                   this.isValid,
+      //                   !this.isOpen,
+      //                   msg
+      //                 );
+      //               });
+      //             }
+      //           }
+      //           return throwError(err);
+      //         },
+      //         () => this.getUsers()
+      //       ),
+      //       takeUntil(this.unsubscribe$)
+      //     )
+      //     .subscribe();
+      // }
     });
   }
 
