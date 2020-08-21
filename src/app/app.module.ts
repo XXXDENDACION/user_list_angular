@@ -22,8 +22,10 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
-import {USER_REDUCER_NODE,userReducer} from '../shared/store/reducers/user.reducer';
+import {USER_REDUCER_NODE,userReducer, reducer} from '../shared/store/reducers/user.reducer';
 import {UserEffects} from '../shared/store/effects/user.effects'
+import {reducerRole} from '../shared/store/reducers/role.reducer'
+import { RoleEffects } from '../shared/store/effects/role.effects'
 
 @NgModule({
   declarations: [
@@ -47,10 +49,9 @@ import {UserEffects} from '../shared/store/effects/user.effects'
     ReactiveFormsModule,
     HttpClientModule,
     MatProgressSpinnerModule,
-    StoreModule.forRoot({}, {}),
-    StoreModule.forFeature(USER_REDUCER_NODE,userReducer),
+    StoreModule.forRoot({user: reducer, role: reducerRole}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([UserEffects])
+    EffectsModule.forRoot([UserEffects, RoleEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]

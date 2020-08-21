@@ -25,15 +25,18 @@ export class UserService {
   }
 
   addUser(user: User): Observable<User> {
-    console.log('test');
+
     return this.http.post<User>(this.url, user);
   }
 
   updateUser(id: string, user: User): Observable<User> {
+    console.log('test');
     return this.http.patch<User>(this.url + `?id=${id}`, user);
   }
 
   deleteUser(id: string): Observable<User> {
     return this.http.delete<User>(this.url + `?id=${id}`);
   }
+
+  
 }

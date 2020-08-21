@@ -32,8 +32,16 @@ import {
   UserGetActionSucces,
   UserReloadAction,
   UserAddActionCall,
+  UserUpdateActionCall,
+  UserDeleteActionCall,
 } from 'src/shared/store/actions/user.actions';
-import { selectUsers, selectUser } from '../../../shared/store/selectors/user.selectors';
+import {
+  selectUsers,
+  selectUser,
+} from '../../../shared/store/selectors/user.selectors';
+import { Role } from 'src/shared/models/role';
+import { selectRoles } from '../../../shared/store/selectors/role.selectors'
+import { RoleGetActionCall } from 'src/shared/store/actions/role.actions';
 
 @Component({
   selector: 'app-user-list',
@@ -45,6 +53,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   roles;
   searchRoles;
   public getUsers$: Observable<User[]> = this.store$.pipe(select(selectUsers));
+  public getRoles$: Observable<Role[]> = this.store$.pipe(select(selectRoles));
   //public createUser$: Observable<User> = this.store$.pipe(select(selectUser));
   private inputChanged: Subject<string> = new Subject<string>();
   private unsubscribe$ = new Subject();
@@ -87,6 +96,24 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   getRoles(): void {
     this.isLoad = false;
+    this.store$.dispatch(RoleGetActionCall({}));
+    this.getRoles$
+    .pipe(
+      tap(
+        (res) => {
+          console.log(res);
+          this.roles = res;
+            this.searchRoles = [...res];
+            this.isLoad = !this.isLoad;
+        },
+        (err) => console.log(err),
+        () => {
+          
+          this.searchRoles.unshift({ viewValue: 'All' });
+        }
+      ),takeUntil(this.unsubscribe$)
+    ).subscribe()
+    
     this.rolesService
       .getRoles()
       .pipe(
@@ -138,10 +165,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe();
-    console.log(
-      'UserListComponent -> getUsers -> this.getUsers$',
-      this.getUsers$
-    );
   }
 
   onAdd(): void {
@@ -150,106 +173,31 @@ export class UserListComponent implements OnInit, OnDestroy {
       data: { user: {}, roles: this.roles },
     });
     dialogRef.afterClosed().subscribe((result) => {
-    console.log("UserListComponent -> onAdd -> result", result)
-      if(result){
-      this.store$.dispatch(UserAddActionCall({user: result}));
+      if (result) {
+        console.log("UserListComponent -> onAdd -> result", result)
+        this.store$.dispatch(UserAddActionCall({ user: result }));
       }
-      // if (result) {
-      //   this.userService
-      //     .addUser(result)
-      //     .pipe(
-      //       tap(
-      //         (res) => {
-      //           this.popUpService.setData(
-      //             !this.isValid,
-      //             !this.isOpen,
-      //             'User add!'
-      //           );
-      //         },
-      //         (err) => {
-      //           if (err.error.data) {
-      //             for (let item in err.error.data.errors) {
-      //               err.error.data.errors[item].forEach((msg) => {
-      //                 this.popUpService.setData(
-      //                   this.isValid,
-      //                   !this.isOpen,
-      //                   msg
-      //                 );
-      //               });
-      //             }
-      //           }
-      //           return throwError(err);
-      //         },
-      //         () => this.getUsers()
-      //       ),
-      //       takeUntil(this.unsubscribe$)
-      //     )
-      //     .subscribe();
-      // }
     });
   }
 
   onUpdate(user: User): void {
+    
     const dialogRef = this.dialog.open(UserUpdateComponent, {
       width: '800px',
       data: { user: user, roles: this.roles },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.userService
-          .updateUser(user._id, result)
-          .pipe(
-            tap(
-              (res) => {
-                this.popUpService.setData(
-                  !this.isValid,
-                  !this.isOpen,
-                  'User update!'
-                );
-              },
-              (err) => {
-                if (err.error.data) {
-                  for (let item in err.error.data.errors) {
-                    err.error.data.errors[item].forEach((msg) => {
-                      this.popUpService.setData(false, !this.isOpen, msg);
-                    });
-                  }
-                } else {
-                  this.popUpService.setData(false, !this.isOpen, err.message);
-                }
-              },
-              () => this.getUsers()
-            ),
-            takeUntil(this.unsubscribe$)
-          )
-          .subscribe();
+        console.log("UserListComponent -> onUpdate -> result", result)
+        this.store$.dispatch(UserUpdateActionCall({id: user._id ,user: result}))
       }
     });
   }
 
   deleteUser(user: User) {
     if (confirm('Вы хотите удалить пользователя?')) {
-      this.userService
-        .deleteUser(user._id)
-        .pipe(
-          tap(
-            (res) => {
-              this.popUpService.setData(true, !this.isOpen, 'User delete!');
-            },
-            (err) => {
-              this.popUpService.setData(false, !this.isOpen, err.message);
-            },
-            () => this.getUsers()
-          ),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe();
+     this.store$.dispatch(UserDeleteActionCall({id: user._id}))
     }
   }
-  testFunc(): void {
-    const numbers$ = timer(1000, 1000);
-    numbers$.subscribe((x) => console.log(x));
-    const result$ = numbers$.pipe(bufferCount(10));
-    result$.subscribe((x) => console.log(x));
-  }
+
 }
